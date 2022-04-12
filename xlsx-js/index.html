@@ -1,0 +1,615 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>SheetJS Live Demo</title>
+
+
+    <link rel="stylesheet" href="1http://v.bootstrapmb.com/2022/3/mp7t512127/css/base.css" type="text/css">
+    <link rel="stylesheet" href="1http://v.bootstrapmb.com/2022/3/mp7t512127/css/home.css" type="text/css">
+    <link rel="stylesheet" href="https://www.jq22.com/demo/jQuery-chosen20160806/css/chosen.css" type="text/css">
+    <style>
+        body, html, td {
+            font-size: 14px;
+        }
+
+        .list table {
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .list td {
+            white-space: nowrap;
+            border-top: 1px solid #eee;
+            border-left: 1px solid #eee;
+            text-align: center;
+        }
+
+        .red {
+            background: #f00;
+            color: #fff;
+        }
+
+        .select select {
+            width: 200px;
+            max-height: 200px
+        }
+
+        .chosen-container {
+            float: left;
+            top: 2px;
+            margin-right: 10px;
+        }
+
+        .chosen-container .chosen-results {
+            height: 200px;
+        }
+
+        .up {
+            width: 150px;
+            height: 50px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-radius: 5px;
+            line-height: 50px;
+            color: #fff;
+            left: 10px;
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+        }
+
+        #excel-file {
+            position: absolute;
+            opacity: 0;
+            display: block;
+            height: 100%;
+            height: 100%;
+        }
+
+        .aui-form-control-two {
+            width: 300px;
+            display: inline-block;
+        }
+
+        .n2 {
+            width: 700px;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .input {
+            height: 36px;
+            padding: 8px 16px;
+            font-size: 12px;
+            line-height: 1.42857143;
+            color: #222;
+            background-color: #fff;
+            border: 1px solid #b3cef9;
+            overflow-y: hidden;;
+            border-radius: 4px;
+        }
+
+        .btn {
+            color: #FFF;
+            display: inline-block;
+            background: #F45858;
+            color: #FFF;
+            margin-bottom: 0;
+            font-weight: 400;
+            text-align: center;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            max-height: 38px;
+            background-image: none;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            border-radius: 2px;
+            padding: 7px 20px;
+            font-size: 12px;
+        }
+
+        .list {
+            clear: both;
+            padding-top: 20px;
+        }
+
+        .hidden {
+            height: 1px;
+            overflow: hidden;
+        }
+    </style>
+    <script src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+    <script src="https://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://www.jq22.com/demo/jQuery-chosen20160806/js/chosen.jquery.js"></script>
+
+
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://www.layuiweb.com/res/layui/dist/css/layui.css" media="all">
+    <script src="https://www.layuiweb.com/res/layui/release/layer/dist/layer.js-v=351-1.js"></script>
+    <script>
+        // 接收参数
+        var $_GET = (function () {
+            var url = window.document.location.href.toString();
+            var u = url.split("?");
+            if (typeof (u[1]) == "string") {
+                u = u[1].split("&");
+                var get = {};
+                for (var i in u) {
+                    var j = u[i].split("=");
+                    get[j[0]] = j[1];
+                }
+                return get;
+            } else {
+                return {};
+            }
+        })();
+        $(function () {
+            if ($_GET['def'] == undefined) {
+                $_GET['def'] = "0;11;21;31;41;51;61;71;81;91;101;111;121;131;141;151;161;171;181;191;201;211;221;231;241;251;261;271;281;291;301;311;321;331;341;351;361;371;381;391;401;411;421;431;441;451;461;471;481;491;501;511;521;531;541;551;561;571;581;591;601;611;621;631;641;651;661;671;681;691;701;711;721;731;741;751;761;771;781;791;801;811;821;831;841;851;861;871;881;891;901;911;921;931;941;951;961;971;981;991;1001;1011;1021;1031;1041;1051;1061;1071;1081;1091;1101;1111;1121;1131;1141;1151;1161;1171;1181;1191;1201;1211;1221;1231;1241;1251;1261;1271;1281;1291;1301;1311;1321;1331;1341;1351;1361;1371;1381;1391;1401;1411;1421;1431;1441;1451;1461;1471;1481;1491;1501;";
+            }
+            $(".def").html($_GET['def']);
+            console.log($_GET['def']);
+        })
+    </script>
+</head>
+<body>
+<table>
+    <tr>
+        <td>
+            <textarea class="def input" style="width:800px;height: 120px;"></textarea>
+        </td>
+        <td>
+            <div class="up"><input type="file" id="excel-file">选择文件</div>
+        </td>
+    </tr>
+</table>
+
+<div class="select hidden">
+    <span class="n1"></span>
+    <span class="n2">
+                    <input class="input" name="kg " placeholder="G" type="number">
+                    <button class="button btn " style="margin-left: 10px;width: 65px;">查询</button>
+                    <button class="exp btn" style="margin-left: 10px;width: 65px; background: #074477">下载</button>
+                </span>
+
+    <span class="n4"></span>
+</div>
+<div class="list">
+    <table id="tabledata">
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        console.log($_GET);
+        var listAll = [
+            "阿拉伯联合酋长国",
+            "阿尔巴尼亚",
+            "阿根廷",
+            "奥地利",
+            "澳大利亚",
+            "波斯尼亚和黑塞哥维那",
+            "巴巴多斯",
+            "比利时",
+            "保加利亚",
+            "百慕大",
+            "巴西",
+            "加拿大",
+            "瑞士",
+            "智利",
+            "哥伦比亚",
+            "哥斯达黎加",
+            "塞浦路斯",
+            "捷克",
+            "德国",
+            "丹麦",
+            "多米尼加共和国",
+            "厄瓜多尔",
+            "爱沙尼亚",
+            "埃及",
+            "西班牙",
+            "芬兰",
+            "法国",
+            "英国",
+            "希腊",
+            "洪都拉斯",
+            "克罗地亚",
+            "匈牙利",
+            "印度尼西亚",
+            "爱尔兰",
+            "以色列",
+            "印度",
+            "意大利",
+            "牙买加",
+            "约旦",
+            "日本",
+            "韩国",
+            "科威特",
+            "列支敦士登",
+            "立陶宛",
+            "卢森堡",
+            "拉脱维亚",
+            "摩洛哥",
+            "摩纳哥",
+            "摩尔多瓦",
+            "马其顿",
+            "墨西哥",
+            "马来西亚",
+            "荷兰",
+            "挪威",
+            "新西兰",
+            "秘鲁",
+            "菲律宾",
+            "巴基斯坦",
+            "波兰",
+            "波多黎各",
+            "葡萄牙",
+            "卡塔尔",
+            "罗马尼亚",
+            "塞尔维亚",
+            "俄罗斯（》$3）",
+            "沙特阿拉伯",
+            "瑞典",
+            "新加坡",
+            "斯洛文尼亚",
+            "斯洛伐克",
+            "泰国",
+            "土耳其",
+            "台湾",
+            "乌克兰（》$4）",
+            "美国",
+            "委内瑞拉",
+            "维尔京群岛(英属)",
+            "维尔京群岛(美属)",
+            "越南",
+            "南非",
+            "不丹",
+            "乌兹别克斯坦",
+            "乌拉圭",
+            "亚美尼亚",
+            "伯利兹城",
+            "冰岛",
+            "加纳",
+            "加蓬",
+            "博茨瓦纳",
+            "危地马拉",
+            "吉尔吉斯斯坦",
+            "哈萨克斯坦",
+            "圣卢西亚",
+            "圣赫勒拿",
+            "圣马力诺",
+            "圭亚那",
+            "塞舌尔",
+            "多米尼克",
+            "孟加拉",
+            "安圭拉",
+            "安提瓜和巴布达",
+            "安道尔",
+            "尼加拉瓜",
+            "尼日利亚",
+            "尼泊尔",
+            "巴哈马",
+            "巴拉圭",
+            "巴拿马",
+            "巴林",
+            "开曼群岛",
+            "斯威士兰",
+            "斯里兰卡",
+            "柬埔寨",
+            "格林纳达",
+            "格鲁吉亚",
+            "毛里求斯",
+            "汤加",
+            "泽西岛",
+            "特立尼达和多巴哥",
+            "玻利维亚",
+            "直布罗陀",
+            "突尼斯",
+            "纳米比亚",
+            "纽埃",
+            "缅甸",
+            "肯尼亚",
+            "苏里南",
+            "萨尔瓦多",
+            "蒙古国",
+            "蒙特塞拉特岛",
+            "赞比亚",
+            "阿塞拜疆",
+            "阿尔及利亚",
+            "阿曼",
+            "阿鲁巴岛",
+            "马尔代夫",
+            "马耳他",
+            "黑山"];
+        // const list = Object.keys(persons[0]);
+        var html = "";
+        html += "<tr>"
+        html += "<td>敏感货标记</td><td>国家</td><td>最小重量</td><td>最大重量</td><td>物流费</td><td>固定费</td>";
+        html += "<td>最小重量</td><td>最大重量</td><td>物流费</td><td>固定费</td>";
+        html += "<td>最小重量</td><td>最大重量</td><td>物流费</td><td>固定费</td>";
+        html += "</tr>"
+        html += "<tr>"
+        html += "<td></td><td></td><td></td><td></td><td></td><td></td>";
+        html += "<td></td><td></td><td></td><td></td>";
+        html += "<td></td><td></td><td></td><td></td>";
+        html += "</tr>"
+
+
+        function sel(persons) {
+            var i = 0;
+            var index = 0;
+            var operation = "";
+            var mark = 0;
+            var list = {};
+            var phtml = "";
+            persons.forEach(function (value) {
+                if (value["国家"] == undefined) {
+                    return;
+                }
+
+                var sname = value["国家"].split("(");
+                var nameinfo = sname[1].substr(0, sname[1].length - 1)
+                if (i == 3) {
+                    phtml += "</tr>"
+                    phtml = "";
+                    i = 0;
+                }
+
+                if (i == 0) {
+                    index++;
+                }
+
+                i++;
+                if (!isNaN(parseInt(value["敏感货标记(0:普货,1:带电,2:敏感)"]))) {
+                    mark = value["敏感货标记(0:普货,1:带电,2:敏感)"]
+                }
+
+                if (i == 1) {
+                    phtml += "<tr index='" + index + "' mark='" + mark + "'>"
+                    phtml += "<td class='mark' >" + mark + "</td>"
+                    operation += "<option value='" + index + "' mark='" + mark + "'>" + nameinfo + " | " + mark + "</option>"
+                }
+
+                //  console.log("i:",i);
+
+                if (i < 2) {
+                    phtml += "<td class='name'>" + nameinfo + "</td>"
+                }
+
+                phtml += "<td class='min' i='" + i + "'>" + parseInt(parseFloat(value["最小重量(公斤)"]) * 1000) + "</td>"
+                phtml += "<td class='max' i='" + i + "'>" + parseInt(parseFloat(value["最大重量(公斤)"]) * 1000) + "</td>"
+                phtml += "<td class='logi' i='" + i + "'>" + value["物流费(每公斤)"] + "</td>"
+                phtml += "<td class='fixed' i='" + i + "'>" + value["固定费(单件)"] + "</td>"
+
+                if (typeof list[nameinfo] == "undefined") {
+                    list[nameinfo] = {};
+                }
+                list[nameinfo][mark] = phtml
+
+            })
+            console.log(list);
+
+            listAll.forEach(function (nvalue) {
+
+                if (list[nvalue]) {
+                    html += list[nvalue][0]
+                    html += list[nvalue][1]
+                    html += list[nvalue][2]
+                } else {
+                    html += "<tr><td></td><td>" + nvalue + "</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+                }
+            })
+            console.log(html);
+            return {"html": html, "operation": operation}
+        }
+
+        function allHtml(persons) {
+            var s = sel(persons);
+            console.log(s);
+            $(".list table").html(s["html"]);
+            var select = "";
+            select += "<select class='select_name'>"
+            select += s["operation"];
+            select += "</select>"
+            $('.select .n1').html(select);
+            $('.select').find("select").chosen();
+            spex();
+        }
+
+        var layerIndex;
+
+
+        $('#excel-file').change(function (e) {
+            layerIndex = layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+
+            var files = e.target.files;
+
+            var fileReader = new FileReader();
+            fileReader.onload = function (ev) {
+                try {
+                    var data = ev.target.result,
+                        workbook = XLSX.read(data, {
+                            type: 'binary'
+                        }), // 以二进制流方式读取得到整份excel表格对象
+                        persons = []; // 存储获取到的数据
+                } catch (e) {
+                    console.log('文件类型不正确');
+                    return;
+                }
+
+                // 表格的表格范围，可用于判断表头是否数量是否正确
+                var fromTo = '';
+                // 遍历每张表读取
+                for (var sheet in workbook.Sheets) {
+                    if (workbook.Sheets.hasOwnProperty(sheet)) {
+                        fromTo = workbook.Sheets[sheet]['!ref'];
+                        console.log(fromTo);
+                        persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                        // break; // 如果只取第一张表，就取消注释这行
+                    }
+                }
+
+                console.log(persons);
+                allHtml(persons);
+                layer.close(layerIndex);
+                $('.select').removeClass("hidden");
+            };
+            // 以二进制方式打开文件
+            fileReader.readAsBinaryString(files[0]);
+        });
+
+        function suminfo(b_index, b_mark, b_kg) {
+            var b_i = 0
+            var tr = $(".list table").find("tr[index=" + b_index + "][mark=" + b_mark + "]");
+            if (tr.size() > 0) {
+                console.log(tr.html());
+                var b_y = "";
+                var sum = 0;
+                var fixed;
+                var logi;
+                tr.find(".max").each(function () {
+                    var min = parseFloat($(this).prev(".min").html()) / 1000;
+                    var max = parseFloat($(this).html()) / 1000;
+                    if (max >= b_kg && min <= b_kg) {
+                        b_i = ($(this).attr("i"));
+                        fixed = parseFloat($(this).parent().show().find(".fixed[i=" + b_i + "]").html());
+                        logi = parseFloat($(this).parent().show().find(".logi[i=" + b_i + "]").html());
+                        if (b_i == 3) {
+                            var kg = Math.ceil(b_kg);
+                            b_y = "(" + kg + "*" + logi + ")+" + fixed + "=";
+                            sum = (kg * logi);
+                        } else {
+                            b_y = logi + "+" + fixed + "=";
+                            sum = logi;
+                        }
+
+                    }
+                })
+                return {"b_i": b_i, "b_y": b_y, "fixed": fixed, "num": sum};
+            }
+
+
+        }
+
+        //生成另外的重量价格
+        function spex() {
+            var def = $(".def").val().split(";");
+            def.forEach(function (b_g, b_key) {
+                if (!isNaN(parseInt(b_g))) {
+                    var b_kg = parseInt(b_g) / 1000;
+                    $(".list table").find("tr:first-child").append("<td>" + b_g + "</td>").append("<td>Column" + (b_key + 1) + "</td>");
+                    $(".list table").find("tr").eq(1).append("<td>续重</td><td>挂号费</td>");
+                    //[index="+b_index+"][mark="+b_mark+"]
+                    $(".list table").find("tr").each(function () {
+                        if (!isNaN(parseInt($(this).attr("index")))) {
+                            var d = suminfo($(this).attr("index"), $(this).attr("mark"), b_kg);
+                            console.log("---", d);
+                            //    console.log("---------",$(this).attr("index"), $(this).attr("mark"), b_kg);
+                            $(this).append("<td>" + d["num"] + "</td>");
+                            $(this).append("<td>" + d["fixed"] + "</td>")
+                            //      return ;
+                        }
+                    })
+                }
+            })
+        }
+
+        //查询
+        $('.button').click(function () {
+            $(".n4").html("");
+            var b_index = $(".n1 select").val();
+            var b_mark = parseFloat($(".n1 select").find("option:selected").attr("mark"));
+            var b_kg = parseFloat($(".n2 input").val()) / 1000;
+            console.log(b_index, b_mark, b_kg);
+
+            $(".list table").find("td").removeClass("red")
+            $(".list table").find("tr").hide();
+            $(".list table").find("tr").eq(0).show();
+
+            if (b_kg > 15 || isNaN(b_kg)) {
+                alert("cannot be greater than KG <=15 and >0  ");
+                $(".list table").find("tr").show();
+            }
+            var su = suminfo(b_index, b_mark, b_kg);
+            //  console.log(su,su["num"]);
+            $(".list table").find("tr[index=" + b_index + "][mark=" + b_mark + "]").show().find("[i=" + su["b_i"] + "]").addClass("red");
+            $(".n4").html(su["b_y"]);
+            $(".n4").append(su["num"] + su["fixed"]);
+        })
+
+    });
+</script>
+<script>
+
+    $(function () {
+
+        //导出
+        $('.exp').click(function () {
+            btn_export("tabledata", "导出")
+        })
+
+        function btn_export(id, filename) {
+            let table1 = document.getElementById(id);
+            let sheet = XLSX.utils.table_to_sheet(table1);//将一个table对象转换成一个sheet对象
+            openDownloadDialog(sheet2blob(sheet), filename + '.xlsx');
+        }
+
+        // 将一个sheet转成最终的excel文件的blob对象，然后利用URL.createObjectURL下载
+        function sheet2blob(sheet, sheetName) {
+            sheetName = sheetName || 'sheet1';
+            let workbook = {
+                SheetNames: [sheetName],
+                Sheets: {}
+            };
+            workbook.Sheets[sheetName] = sheet; // 生成excel的配置项
+
+            let wopts = {
+                bookType: 'xlsx', // 要生成的文件类型
+                bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+                type: 'binary'
+            };
+            let wbout = XLSX.write(workbook, wopts);
+            let blob = new Blob([s2ab(wbout)], {
+                type: "application/octet-stream"
+            }); // 字符串转ArrayBuffer
+            function s2ab(s) {
+                let buf = new ArrayBuffer(s.length);
+                let view = new Uint8Array(buf);
+                for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            }
+
+            return blob;
+        }
+
+        function openDownloadDialog(url, saveName) {
+            if (typeof url == 'object' && url instanceof Blob) {
+                url = URL.createObjectURL(url); // 创建blob地址
+            }
+            let aLink = document.createElement('a');
+            aLink.href = url;
+            aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+            let event;
+            if (window.MouseEvent) event = new MouseEvent('click');
+            else {
+                event = document.createEvent('MouseEvents');
+                event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            }
+            aLink.dispatchEvent(event);
+
+
+        }
+    });
+</script>
+
+
+</body>
+</html>
