@@ -1,0 +1,108 @@
+<!-- 将 在线的xls 文件转换成json,前提是 cors 放开 -->
+<!doctype html>
+<html lang="en">
+ 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>上传文件</title>
+  <script type="text/javascript" src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.core.min.js"></script>
+    <script type="text/javascript" src="http://ued.t.huijiaoyun.com/tianyu_edu_dev//common/js/jquery.js"></script>
+</head>
+ 
+<body>
+  文件：<br>
+  <input type="file" id="file"><br>
+</body>
+<script>
+//补0
+function repair(i){
+    if (i >= 0 && i <= 9) {
+        return "0" + i;
+    } else {
+        return i;
+	}
+}
+//时间函数
+//console.log('time int',DateTime());
+//console.log('Y-m-d H:i:s',DateTime('Y-m-d H:i:s-n'));
+function DateTime(param) {
+	 var date = new Date(); //当前时间
+	if(!param){
+		return date.getTime();
+	}
+   
+    var year = date.getFullYear(); //返回指定日期的年份
+    var month = repair(date.getMonth() + 1); //月
+    var day = repair(date.getDate()); //日
+    var hour = repair(date.getHours()); //时
+    var minute = repair(date.getMinutes()); //分
+    var second = repair(date.getSeconds()); //秒
+	var nss = date.getMilliseconds(); // 毫秒
+    return param.replace(/(Y|m|d|H|\i|s|n)/gi,function($k,$v){return {Y:year,m:month,d:day,H:hour,i:minute,s:second,n:nss}[$v]; })
+}
+ console.log('time int',DateTime());
+ console.log('Y-m-d H:i:s',DateTime('Y-m-d H:i:s-n'));
+</script>
+<script>
+
+/**
+ 本方法不支持只取最后一个sheet,所有参数从1开始,返回是从0开始
+ 参数
+ length=sheet  总条数
+ startSheet=sheet 页码
+ returns =sheet 名称
+ 
+*/
+function OpenXlsToJson(param,fun){
+	if(!param['length']){
+		param['length']=1;
+	}
+	if(!param['returns']){
+		param['returns']='int';
+	}
+	if(!param['startSheet']){
+		param['startSheet']=1;
+	}
+	var xhr = new XMLHttpRequest();
+		xhr.open("get",param['url'], true);
+		xhr.responseType = "blob";
+		xhr.onload = function(e) {
+			if (this.status == 200) {
+			   const reader = new FileReader();
+			   reader.readAsArrayBuffer(this.response);
+                reader.onload = function () {
+					const workbook =XLSX.read(reader.result, { type: 'binary' });
+					var _json={};
+					//for(var i in workbook.SheetNames){
+					for(var i = param['startSheet']-1; i <= (param['length']-1)+(param['startSheet']-1); i++) {
+						//console.log(i);
+						if(i<workbook.SheetNames.length){
+							_json[param['returns']=='int'?(i):(workbook.SheetNames[i])]=JSON.stringify(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[i]]));
+						}
+					}
+					 return fun(_json);
+                };
+			}else{
+				concole.error('error status',this.status);
+			}
+		}
+		xhr.send();
+	//return false;
+}
+	
+	
+	$(function(){
+		//
+		//OpenXlsToJson({'url':'./a.xlsx','length':2,'startSheet':2},function(json){console.log('json:',json);});
+		
+		OpenXlsToJson({'url':'./a.xlsx?id=1'},function(json){
+			console.log('json:',json);
+		});
+		//
+	})	
+	</script>
+
+</html>
